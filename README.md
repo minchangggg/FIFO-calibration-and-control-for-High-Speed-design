@@ -1,13 +1,13 @@
-<img width="6730" height="4700" alt="rx_dv_may2-Page-5" src="https://github.com/user-attachments/assets/657b5b3a-efba-4e24-b3ac-710e20a6c9ff" /># OVERVIEW
+# OVERVIEW
 In high-speed data transfer design, there is always requirement to convert slow speed clock domain to high-speed clock domain. In some designs, the high-speed data region is high density that it doesn’t allow any logic except for data pipelines. There is also requirement to reduce data latency as much as possible.
 
 The above requirements lead to free running FIFO design (pointer always switches when clock is available), that only converts data from low speed to high speed and removes all normal flags such as empty or full. To use the FIFO properly, the controller must calibrate the pointer, so that the FIFO will never be empty or full.
 
-<img width="542" height="162" alt="fifo-Architecture drawio" src="https://github.com/user-attachments/assets/58be08ff-d59c-447c-90b2-efd7229aa8c3" />
+<img width="542" alt="fifo-Architecture drawio" src="https://github.com/user-attachments/assets/58be08ff-d59c-447c-90b2-efd7229aa8c3" />
 
 > Figure High Speed Design
 
-<img width="6560" height="3856" alt="fifo-Top Wrapper Interface" src="https://github.com/user-attachments/assets/112a1181-9bfe-4d18-90e3-226dc8f95281" />
+<img width="1000" alt="image" src="https://github.com/user-attachments/assets/112a1181-9bfe-4d18-90e3-226dc8f95281">
 
 > Figure TOP Wrapper of CTL and FIFO
 
@@ -76,11 +76,11 @@ A fixed-latency control pipeline is inserted between TX CTL and the TX FIFO Top 
 
 Before calibration, the relative position between write and read pointers is undefined, and safe data transfer is not guaranteed.
 
-<img width="851" height="366" alt="image" src="https://github.com/user-attachments/assets/2080d3b1-ad8a-4a37-babc-89340beafc30" />
+<img width="851" alt="image" src="https://github.com/user-attachments/assets/2080d3b1-ad8a-4a37-babc-89340beafc30" />
 
 > Figure. TX Wrapper Architecture and Data/Control Path Integration
 
-<img width="411" height="235" alt="image" src="https://github.com/user-attachments/assets/bda37c14-7da2-455a-a9b2-d86baff39d8f" />
+<img width="411" alt="image" src="https://github.com/user-attachments/assets/bda37c14-7da2-455a-a9b2-d86baff39d8f" />
 
 > Figure. Long Pipeline
 
@@ -100,48 +100,48 @@ Before calibration, the relative position between write and read pointers is und
 - The FIFO does not provide explicit full/empty status and therefore relies entirely on calibration to guarantee safe operation.
 - A safe pointer separation is maintained through the TX calibration mechanism to ensure reliable data transfer in the absence of flow-control signals.
 
-<img width="654" height="324" alt="image" src="https://github.com/user-attachments/assets/7aa4763c-811c-482a-918f-0af482be6ec1" />
+<img width="654" alt="image" src="https://github.com/user-attachments/assets/7aa4763c-811c-482a-918f-0af482be6ec1" />
 
 > Figure. TX FIFO Data Path and Internal Structure
 
-<img width="636" height="390" alt="image" src="https://github.com/user-attachments/assets/9dc22294-0794-4ff5-83d0-86f3a1bb6a42" />
+<img width="636" alt="image" src="https://github.com/user-attachments/assets/9dc22294-0794-4ff5-83d0-86f3a1bb6a42" />
 
 > Figure. TX FIFO Memory Mapping (16-bit Word to 4-bit Beats)
 
-<img width="386" height="212" alt="image" src="https://github.com/user-attachments/assets/239857b5-fc6c-4895-9089-487de648db53" />
+<img width="386" alt="image" src="https://github.com/user-attachments/assets/239857b5-fc6c-4895-9089-487de648db53" />
 
 > Figure. TX FIFO Model Delay Block (Propagation Delay)
 
-<img width="526" height="278" alt="image" src="https://github.com/user-attachments/assets/6292ea91-1242-4a89-b7e3-249d1c9ae540" />
+<img width="526" alt="image" src="https://github.com/user-attachments/assets/6292ea91-1242-4a89-b7e3-249d1c9ae540" />
 
 > Figure. Example of Write/Read Pointer Separation Illustrates pointer distance with margin = 0
 
-<img width="314" height="136" alt="image" src="https://github.com/user-attachments/assets/4f9b1313-4e41-4764-97e8-6bf0166ec034" />
-<img width="298" height="138" alt="image" src="https://github.com/user-attachments/assets/aff7956e-8ba1-4c99-a59f-c5d2fc0a308a" />
-<img width="607" height="282" alt="image" src="https://github.com/user-attachments/assets/3e2b0235-cc73-4f5d-8663-68c23b01a8b3" />
+<img width="314" alt="image" src="https://github.com/user-attachments/assets/4f9b1313-4e41-4764-97e8-6bf0166ec034" />
+<img width="298" alt="image" src="https://github.com/user-attachments/assets/aff7956e-8ba1-4c99-a59f-c5d2fc0a308a" />
+<img width="607" alt="image" src="https://github.com/user-attachments/assets/3e2b0235-cc73-4f5d-8663-68c23b01a8b3" />
 
 > Figure. TX FIFO calibration block
 
-<img width="469" height="383" alt="image" src="https://github.com/user-attachments/assets/83a03681-8ad9-405a-8633-1d47861db9a9" />
+<img width="469" alt="image" src="https://github.com/user-attachments/assets/83a03681-8ad9-405a-8633-1d47861db9a9" />
 
-> (a) No valid overlap → TxCalOut = 0
+      (a) No valid overlap → TxCalOut = 0
 
-<img width="445" height="368" alt="image" src="https://github.com/user-attachments/assets/ee837472-1847-4379-917c-1dde40b671a6" />
+<img width="445" alt="image" src="https://github.com/user-attachments/assets/ee837472-1847-4379-917c-1dde40b671a6" />
 
-> (b) Read pointer enters detection window → TxCalOut = 1
+      (b) Read pointer enters detection window → TxCalOut = 1
 
 > Figure. TX FIFO Calibration Timing for Different CalOut Conditions
 
-<img width="507" height="99" alt="image" src="https://github.com/user-attachments/assets/3999f3c1-65b7-451d-8fd5-f8e146b10fb2" />
-<img width="363" height="318" alt="image" src="https://github.com/user-attachments/assets/29441c86-3e73-4acc-98fc-cd381ec5632a" />
+<img width="507" alt="image" src="https://github.com/user-attachments/assets/3999f3c1-65b7-451d-8fd5-f8e146b10fb2" />
+<img width="363" alt="image" src="https://github.com/user-attachments/assets/29441c86-3e73-4acc-98fc-cd381ec5632a" />
 
 > Figure. Read Clock Pause Logic and Waveform
 
-<img width="350" height="96" alt="image" src="https://github.com/user-attachments/assets/0f1dac5f-3c31-4be0-9bea-5d1cb7f17946" />
+<img width="350" alt="image" src="https://github.com/user-attachments/assets/0f1dac5f-3c31-4be0-9bea-5d1cb7f17946" />
 
 > Figure. CDC logic
 
-<img width="1014" height="425" alt="image" src="https://github.com/user-attachments/assets/871fc8ff-defc-47e2-ba61-51e65d192a24" />
+<img width="1014" alt="image" src="https://github.com/user-attachments/assets/871fc8ff-defc-47e2-ba61-51e65d192a24" />
 
 > Figure. Read Pointer Margin Adjustment
 
@@ -152,8 +152,8 @@ This interconnection guarantees correct data ordering and coherent pointer advan
 
 Furthermore, the unified pointer scheme enables consistent data alignment and accurate calibration across the entire TX data path.
 
-<img width="412" height="245" alt="image" src="https://github.com/user-attachments/assets/978a2aa5-7bbf-4f56-9bb0-d306f39be68e" />
-<img width="557" height="416" alt="image" src="https://github.com/user-attachments/assets/e2f10f09-5eea-461b-953f-c8b229261a96" />
+<img width="412" alt="image" src="https://github.com/user-attachments/assets/978a2aa5-7bbf-4f56-9bb0-d306f39be68e" />
+<img width="557" alt="image" src="https://github.com/user-attachments/assets/e2f10f09-5eea-461b-953f-c8b229261a96" />
 
 > Figure. TX FIFO TOP Interconnection in the High‑speed Domain
 
@@ -173,9 +173,9 @@ To achieve modularity, timing robustness, and scalability, the TX CTL is partiti
 
 Each block has a clearly defined responsibility and communicates with the others using well-scoped control and status signals.
 
-<img width="350" height="164" alt="image" src="https://github.com/user-attachments/assets/968c1269-4537-4244-9acb-c58e65120709" />
+<img width="350" alt="image" src="https://github.com/user-attachments/assets/968c1269-4537-4244-9acb-c58e65120709" />
 
-<img width="596" height="379" alt="image" src="https://github.com/user-attachments/assets/30786dd8-9282-4949-953d-482bfeca850c" />
+<img width="596" alt="image" src="https://github.com/user-attachments/assets/30786dd8-9282-4949-953d-482bfeca850c" />
 
 > Figure. TX Calibration Controller Architecture
 
@@ -191,9 +191,9 @@ All control and status signals exchanged between the TX Controller and TX FIFO p
 
 The overall timing relationship between write operations, calibration feedback, and synchronized evaluation is illustrated in the waveform below.
 
-<img width="296" height="92" alt="image" src="https://github.com/user-attachments/assets/a7a17e3e-1ba5-4824-81d5-dc5376444ae7" />
+<img width="296" alt="image" src="https://github.com/user-attachments/assets/a7a17e3e-1ba5-4824-81d5-dc5376444ae7" />
 
-<img width="996" height="508" alt="image" src="https://github.com/user-attachments/assets/1f539e6d-2946-43c0-b3ee-5441965598f7" />
+<img width="996" alt="image" src="https://github.com/user-attachments/assets/1f539e6d-2946-43c0-b3ee-5441965598f7" />
 
 > Figure. CDC Synchronization and Deterministic Delay before CalOut Evaluation (PIPE_DEPTH = 2)
 
@@ -206,94 +206,93 @@ Therefore, starting from the assertion of start_calib in the controller, CalOut 
 This timing-aware design ensures that calibration decisions are made only when feedback signals are stable and correctly aligned with their corresponding write operations.
 
 #### TX WRITE GENERATION
-<img width="379" height="150" alt="image" src="https://github.com/user-attachments/assets/3a7a07e0-4dc7-4150-934a-a80dab7eaf63" />
+<img width="350" alt="image" src="https://github.com/user-attachments/assets/3a7a07e0-4dc7-4150-934a-a80dab7eaf63" />
 
-<img width="568" height="379" alt="image" src="https://github.com/user-attachments/assets/15eb7371-a7a6-4ddd-a26c-2176b7653fd7" />
+<img width="568" alt="image" src="https://github.com/user-attachments/assets/15eb7371-a7a6-4ddd-a26c-2176b7653fd7" />
 
-<img width="773" height="569" alt="image" src="https://github.com/user-attachments/assets/c5c76633-fbff-48c9-937e-3c7ecb289dfb" />
+<img width="500" alt="image" src="https://github.com/user-attachments/assets/c5c76633-fbff-48c9-937e-3c7ecb289dfb" />
 
 
 #### TX CALIBRATION SEQUENCER
-<img width="448" height="195" alt="image" src="https://github.com/user-attachments/assets/db721d15-092d-422a-9799-49ee55f89fb2" />
-
-<img width="866" height="566" alt="image" src="https://github.com/user-attachments/assets/190add2f-7180-417a-9f77-29207ccb3375" />
+<img width="400" alt="image" src="https://github.com/user-attachments/assets/db721d15-092d-422a-9799-49ee55f89fb2" />
+<img width="750" alt="image" src="https://github.com/user-attachments/assets/190add2f-7180-417a-9f77-29207ccb3375" />
 
 > Figure. TX calibration sequencer block diagram
 
-<img width="557" height="134" alt="image" src="https://github.com/user-attachments/assets/19c259db-bdec-45db-8717-294a1c2babd5" />
+<img width="500" alt="image" src="https://github.com/user-attachments/assets/19c259db-bdec-45db-8717-294a1c2babd5" />
 
       (a) CalibSessionCtrl Sub block diagram
 
-<img width="619" height="195" alt="image" src="https://github.com/user-attachments/assets/40ed548b-51b5-4547-9b46-515ccdfcf5a4" />
+<img width="550" alt="image" src="https://github.com/user-attachments/assets/40ed548b-51b5-4547-9b46-515ccdfcf5a4" />
 
       (b) CalibStartCtrl Sub block diagram
 
-<img width="509" height="153" alt="image" src="https://github.com/user-attachments/assets/6258be76-becb-4c02-8c15-7275e0092e84" />
+<img width="480" alt="image" src="https://github.com/user-attachments/assets/6258be76-becb-4c02-8c15-7275e0092e84" />
 
       (c) CalOutCheck Sub block diagram
 
-<img width="759" height="216" alt="image" src="https://github.com/user-attachments/assets/ce4e6c92-9c70-4700-beba-2018b5da1bbb" />
+<img width="680" alt="image" src="https://github.com/user-attachments/assets/ce4e6c92-9c70-4700-beba-2018b5da1bbb" />
 
       (d) CalibEndCtrl Sub block diagram
 
-<img width="461" height="152" alt="image" src="https://github.com/user-attachments/assets/854bb4a6-ee78-4e75-8c5d-ca4cb44e9c9c" />
+<img width="380" alt="image" src="https://github.com/user-attachments/assets/854bb4a6-ee78-4e75-8c5d-ca4cb44e9c9c" />
 
-    (e) CalOutInitCtrl Sub block diagram
+      (e) CalOutInitCtrl Sub block diagram
 
 
-<img width="1207" height="822" alt="image" src="https://github.com/user-attachments/assets/73e42bd3-a172-410a-beac-8ac4fbf5c154" />
+<img width="1207" alt="image" src="https://github.com/user-attachments/assets/73e42bd3-a172-410a-beac-8ac4fbf5c154" />
 
-    (a) The calibration start is triggered by an external enable request (txcalib_en)
+      (a) The calibration start is triggered by an external enable request (txcalib_en)
 
-<img width="1254" height="848" alt="image" src="https://github.com/user-attachments/assets/d2550b9a-a4d1-4756-8b1e-3d96df2fd35e" />
+<img width="1254" alt="image" src="https://github.com/user-attachments/assets/d2550b9a-a4d1-4756-8b1e-3d96df2fd35e" />
 
-    (b) Calibration retry sequence when no valid reference is found after a calibration attempt
+      (b) Calibration retry sequence when no valid reference is found after a calibration attempt
 
 > Figure. Timing Diagram of TX Calibration Sequencer
 
 
 #### TX CALIBRATION HELPER
 
-<img width="529" height="205" alt="image" src="https://github.com/user-attachments/assets/e1cf6e73-8908-41ce-94c2-1d6449b7ba33" />
+<img width="430" alt="image" src="https://github.com/user-attachments/assets/e1cf6e73-8908-41ce-94c2-1d6449b7ba33" />
 
-<img width="731" height="347" alt="image" src="https://github.com/user-attachments/assets/6e3c8bec-2077-44c7-9f8e-f5771278fb50" />
+<img width="600" alt="image" src="https://github.com/user-attachments/assets/6e3c8bec-2077-44c7-9f8e-f5771278fb50" />
 
 > Figure. TX Calibration Helper Block Diagram
 
 
-<img width="788" height="190" alt="image" src="https://github.com/user-attachments/assets/ce8bd4ec-9bf5-4675-8fe2-26327f75c36b" />
+<img width="750" alt="image" src="https://github.com/user-attachments/assets/ce8bd4ec-9bf5-4675-8fe2-26327f75c36b" />
 
       (a) RefFoundDetector Sub block diagram
 
-<img width="523" height="244" alt="image" src="https://github.com/user-attachments/assets/56da0df6-b8b8-4800-a927-92d16a381297" />
+<img width="500" alt="image" src="https://github.com/user-attachments/assets/56da0df6-b8b8-4800-a927-92d16a381297" />
 
       (b) PauseLengthSelect Sub block diagram
 
-<img width="866" height="547" alt="image" src="https://github.com/user-attachments/assets/e09af396-efb9-43c6-8c67-d6f5e922aa58" />
+<img width="840" alt="image" src="https://github.com/user-attachments/assets/e09af396-efb9-43c6-8c67-d6f5e922aa58" />
 
       (c) PauseStepCtrl Sub block diagram
 
 
-<img width="1231" height="944" alt="image" src="https://github.com/user-attachments/assets/27da3769-6f9f-4f9d-926d-aa97e328a01e" />
+<img width="1231" alt="image" src="https://github.com/user-attachments/assets/27da3769-6f9f-4f9d-926d-aa97e328a01e" />
 
       (a) Qualified CalOut Rising Edge Detection (Reference Found)
 
-<img width="1057" height="936" alt="image" src="https://github.com/user-attachments/assets/673b25d5-2b1b-4a4d-90bd-db9894abe28c" />
+<img width="1057" alt="image" src="https://github.com/user-attachments/assets/673b25d5-2b1b-4a4d-90bd-db9894abe28c" />
 
       (b) Ignored CalOut Transition During First Calibration
 
 > Figure. Timing Diagram of TX Calibration Helper
 
 ## TX Simulation Results  
-<img width="1462" height="822" alt="image" src="https://github.com/user-attachments/assets/c27246a9-d6a7-472d-a49f-b77dd03ed886" />
+<img width="1462" alt="image" src="https://github.com/user-attachments/assets/c27246a9-d6a7-472d-a49f-b77dd03ed886" />
 
       a) Initial TX Calibration Phase
       
-<img width="1442" height="810" alt="image" src="https://github.com/user-attachments/assets/b7c62371-668a-425b-8825-2961c9d421ae" />
+<img width="1442" alt="image" src="https://github.com/user-attachments/assets/b7c62371-668a-425b-8825-2961c9d421ae" />
 
       b) Detect the reference point via CalOut and adjust it according to the input margin
 
-<img width="1461" height="822" alt="image" src="https://github.com/user-attachments/assets/69e8b956-a6a5-4009-bf59-f7b5425b7e8a" />
+<img width="1461" alt="image" src="https://github.com/user-attachments/assets/69e8b956-a6a5-4009-bf59-f7b5425b7e8a" />
 
       c) Stable TX Operation After Calibration
 
@@ -301,19 +300,89 @@ This timing-aware design ensures that calibration decisions are made only when f
 
 # RX VERIFICATION
 
-<img width="6730" height="4700" alt="rx_dv_may2-Page-5" src="https://github.com/user-attachments/assets/61533fee-f4e6-426a-ad11-dc07abe6e4b0" />
+## File structure
+
+<img width="5000" alt="rx_dv_may2-Page-5" src="https://github.com/user-attachments/assets/61533fee-f4e6-426a-ad11-dc07abe6e4b0" />
+
+<img width="2500" alt="rx_dv_may2-Page-5 (1)" src="https://github.com/user-attachments/assets/ad729a13-ea86-4c2e-b954-bcfbee56e177" />
+
+> Figure. RX Testbench File Structure
+
+## Verification testbench architecture
+The verification testbench architecture is designed as a modular and reusable environment, which is shared for RX calibration verification.
+
+At the top level (TB_TOP), the testbench integrates the Device Under Test (DUT), interface, and checker logic (SVA) to validate functionality and protocol behavior.
+
+<img width="4500" alt="rx_dv_may2-Page-5 (2)" src="https://github.com/user-attachments/assets/9723667d-5811-4baf-9186-612da3c8418b" />
+
+> Figure. Verification testbench architecture
+
+#### RX Clock Generator (VIP)
+- A dedicated rxclk generator (VIP) provides clock stimulus:
+  + Generates configurable clock (frequency, phase, start timing)
+  + Operates independently from stimulus generation
+  + Plays a critical role in calibration, since clock phase affects: CalOut detection, pointer alignment, final calib margin
+
+#### RX Scoreboard
+<img width="600" alt="image" src="https://github.com/user-attachments/assets/12a58dd8-c89c-4989-9fb5-bcfd6a3b617f" />
+
+```
+At T1: rdptr = 3, wrptr = 2 => raw_margin = (2 - 4*4) = -14 => real_margin = -14 + 16 = 2
+At T2: rdptr = 0, wrptr = 6 => raw_margin = (6 - 4*1) = 2 => real_margin = 2
+```
+
+<img width="7000" alt="rx_dv_may2-Page-5 (5)" src="https://github.com/user-attachments/assets/9c555e1a-fa34-4841-9f4c-1349ac49d2f3" />
+
+<img width="7000" alt="rx_dv_may2-Page-5 (4)" src="https://github.com/user-attachments/assets/92d7cbb3-4340-4e6f-a736-4264fda5c486" />
+
+Figure. Scoreboard Margin Calculation and Validation (margin = 2)
+
+#### RX Coverage
+Objective
+- Verify calibration behavior across CalOut, margin, and latency
+- Ensure correctness under all operating conditions
+
+Sampling
+
+- When: When rxcalib_done rising edge
+- Why: stable, final calibration result (latched CalOut)
+
+Coverage Closure
+
+- Directed tests → hit basic bins
+- Random tests → expand space
+- Closure test → fill gaps
+
+=> Target: 100% cross coverage
+
+<img width="659" alt="image" src="https://github.com/user-attachments/assets/10d0b281-9b11-43af-aa5c-89d31be432ac" />
+
+<img width="656" alt="image" src="https://github.com/user-attachments/assets/fa93f25c-92fc-414e-8cf2-eb1f4b249def" />
+
+## RX Verification Results 
+All regression tests passed successfully
+
+No SVA violations were detected during verification
+
+<img width="1212" alt="image" src="https://github.com/user-attachments/assets/d540c645-d96e-4f03-9a6f-6423a982347b" />
+
+> Figure. RX regression test results summary
+
+Achieved 100% functional coverage across all variables and cross coverage
+
+No uncovered bins observed in any coverage group
+
+→ Confirms completeness of verification for RX calibration behavior
+
+<img width="525" alt="image" src="https://github.com/user-attachments/assets/d4417231-fde0-491a-a76f-5af73e8c25b8" />
+
+<img width="940" alt="image" src="https://github.com/user-attachments/assets/a754a8b4-f9b4-49e1-a1b0-0863d82c1391" />
+
+> Figure. RX calibration functional coverage summary
 
 
-<img width="5160" height="2610" alt="rx_dv_may2-Page-5 (1)" src="https://github.com/user-attachments/assets/ad729a13-ea86-4c2e-b954-bcfbee56e177" />
 
 
-<img width="5920" height="3220" alt="rx_dv_may2-Page-5 (2)" src="https://github.com/user-attachments/assets/9723667d-5811-4baf-9186-612da3c8418b" />
-
-
-
-<img width="7770" height="3870" alt="rx_dv_may2-Page-5 (3)" src="https://github.com/user-attachments/assets/015b0318-d101-439c-94e4-15619ce845ba" />
-
-<img width="7620" height="3720" alt="rx_dv_may2-Page-5 (4)" src="https://github.com/user-attachments/assets/92d7cbb3-4340-4e6f-a736-4264fda5c486" />
 
 
 
