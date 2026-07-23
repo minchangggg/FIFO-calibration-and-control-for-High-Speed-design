@@ -55,21 +55,18 @@ The TX FIFO operates using the system clock ( clk ) and transmit clock ( txclk )
 | `rx_calout[3:0]` | Input | `clk` | — | RX calibration feedback value |
 
 ## TX Specifications
-> | Features
+| Features
 
-The TX path is responsible for transferring data from the low-speed control clock domain (clk) to the high-speed transmit clock domain (txclk).
+- The TX path is responsible for transferring data from the low-speed control clock domain (clk) to the high-speed transmit clock domain (txclk).
+- To minimize latency and reduce logic complexity in the high-speed region, a free-running FIFO architecture is adopted, in which conventional full and empty flags are removed.
+- Since both write and read pointers advance continuously with their respective clocks, a dedicated calibration mechanism is required to establish and maintain safe separation between pointers.
+- The TX subsystem therefore consists of the TX FIFO, a FIFO calibration block, and a TX control (TX CTL) unit, all interconnected through deterministic long pipelines to meet timing constraints.
 
-To minimize latency and reduce logic complexity in the high-speed region, a free-running FIFO architecture is adopted, in which conventional full and empty flags are removed. 
+| TX Calibration Flow Summary
 
-Since both write and read pointers advance continuously with their respective clocks, a dedicated calibration mechanism is required to establish and maintain safe separation between pointers.
-The TX subsystem therefore consists of the TX FIFO, a FIFO calibration block, and a TX control (TX CTL) unit, all interconnected through deterministic long pipelines to meet timing constraints.
-
-> | TX Calibration Flow Summary
-
-TX calibration proceeds in three phases: reference sweep, reference confirmation, and margin application.
-
-- During the reference sweep, the read pointer is gradually shifted using discrete read-clock pauses until a valid CalOut transition is detected.
-- Once the reference point is confirmed, additional pauses corresponding to the programmed calibration margin are applied to establish a safe pointer separation for normal operation.
+- TX calibration proceeds in three phases: reference sweep, reference confirmation, and margin application.
+  + During the reference sweep, the read pointer is gradually shifted using discrete read-clock pauses until a valid CalOut transition is detected.
+  + Once the reference point is confirmed, additional pauses corresponding to the programmed calibration margin are applied to establish a safe pointer separation for normal operation.
 
 ### TX WRAPPER
 The TX Wrapper provides the top-level structural integration between the TX Controller (TX CTL) and the TX FIFO blocks. It does not implement protocol or algorithmic logic, but instead focuses on signal routing, timing isolation, and clock-domain interfacing.
@@ -80,84 +77,84 @@ Before calibration, the relative position between write and read pointers is und
 
 <img width="851" height="366" alt="image" src="https://github.com/user-attachments/assets/2080d3b1-ad8a-4a37-babc-89340beafc30" />
 
-Figure. TX Wrapper Architecture and Data/Control Path Integration
+> Figure. TX Wrapper Architecture and Data/Control Path Integration
 
 <img width="411" height="235" alt="image" src="https://github.com/user-attachments/assets/bda37c14-7da2-455a-a9b2-d86baff39d8f" />
 
-Figure. Long Pipeline
+> Figure. Long Pipeline
 
 
 ### TX FIFO
 | Overview
-The TX FIFO implements a free‑running asynchronous FIFO to transfer data from the low‑speed control clock domain ( WrClk ) to the high‑speed transmit clock domain ( RdClk ).
-The FIFO performs a word‑to‑beat data conversion:
-A 16‑bit write word is written into the FIFO in the control domain
-The data is internally stored as four consecutive 4‑bit memory entries
-The read side outputs 4‑bit data beats at high speed
-The FIFO characteristics are as follows:
-Logical depth of 4 words in the write domain
-Equivalent to 16 physical entries in the read domain
-The FIFO does not provide explicit full/empty status and therefore relies entirely on calibration to
-guarantee safe operation.
-A safe pointer separation is maintained through the TX calibration mechanism to ensure reliable data
-transfer in the absence of flow-control signals.
+
+- The TX FIFO implements a free‑running asynchronous FIFO to transfer data from the low‑speed control clock domain ( WrClk ) to the high‑speed transmit clock domain ( RdClk ).
+- The FIFO performs a word‑to‑beat data conversion:
+  + A 16‑bit write word is written into the FIFO in the control domain
+  + The data is internally stored as four consecutive 4‑bit memory entries
+  + The read side outputs 4‑bit data beats at high speed
+- The FIFO characteristics are as follows:
+  + Logical depth of 4 words in the write domain
+  + Equivalent to 16 physical entries in the read domain
+
+- The FIFO does not provide explicit full/empty status and therefore relies entirely on calibration to guarantee safe operation.
+- A safe pointer separation is maintained through the TX calibration mechanism to ensure reliable data transfer in the absence of flow-control signals.
 
 <img width="654" height="324" alt="image" src="https://github.com/user-attachments/assets/7aa4763c-811c-482a-918f-0af482be6ec1" />
 
-Figure. TX FIFO Data Path and Internal Structure
+> Figure. TX FIFO Data Path and Internal Structure
 
 <img width="636" height="390" alt="image" src="https://github.com/user-attachments/assets/9dc22294-0794-4ff5-83d0-86f3a1bb6a42" />
 
-Figure. TX FIFO Memory Mapping (16-bit Word to 4-bit Beats)
+> Figure. TX FIFO Memory Mapping (16-bit Word to 4-bit Beats)
 
 <img width="386" height="212" alt="image" src="https://github.com/user-attachments/assets/239857b5-fc6c-4895-9089-487de648db53" />
 
-Figure. TX FIFO Model Delay Block (Propagation Delay)
+> Figure. TX FIFO Model Delay Block (Propagation Delay)
 
 <img width="526" height="278" alt="image" src="https://github.com/user-attachments/assets/6292ea91-1242-4a89-b7e3-249d1c9ae540" />
 
-Figure. Example of Write/Read Pointer Separation Illustrates pointer distance with margin = 0
-
+> Figure. Example of Write/Read Pointer Separation Illustrates pointer distance with margin = 0
 
 <img width="314" height="136" alt="image" src="https://github.com/user-attachments/assets/4f9b1313-4e41-4764-97e8-6bf0166ec034" />
 <img width="298" height="138" alt="image" src="https://github.com/user-attachments/assets/aff7956e-8ba1-4c99-a59f-c5d2fc0a308a" />
 <img width="607" height="282" alt="image" src="https://github.com/user-attachments/assets/3e2b0235-cc73-4f5d-8663-68c23b01a8b3" />
 
-Figure. TX FIFO calibration block
+> Figure. TX FIFO calibration block
 
 <img width="469" height="383" alt="image" src="https://github.com/user-attachments/assets/83a03681-8ad9-405a-8633-1d47861db9a9" />
 
-(a) No valid overlap → TxCalOut = 0
+> (a) No valid overlap → TxCalOut = 0
 
 <img width="445" height="368" alt="image" src="https://github.com/user-attachments/assets/ee837472-1847-4379-917c-1dde40b671a6" />
 
-(b) Read pointer enters detection window → TxCalOut = 1
+> (b) Read pointer enters detection window → TxCalOut = 1
 
-Figure. TX FIFO Calibration Timing for Different CalOut Conditions
+> Figure. TX FIFO Calibration Timing for Different CalOut Conditions
 
 <img width="507" height="99" alt="image" src="https://github.com/user-attachments/assets/3999f3c1-65b7-451d-8fd5-f8e146b10fb2" />
-
 <img width="363" height="318" alt="image" src="https://github.com/user-attachments/assets/29441c86-3e73-4acc-98fc-cd381ec5632a" />
 
-Figure. Read Clock Pause Logic and Waveform
+> Figure. Read Clock Pause Logic and Waveform
 
 <img width="350" height="96" alt="image" src="https://github.com/user-attachments/assets/0f1dac5f-3c31-4be0-9bea-5d1cb7f17946" />
 
-Figure. CDC logic
+> Figure. CDC logic
 
 <img width="1014" height="425" alt="image" src="https://github.com/user-attachments/assets/871fc8ff-defc-47e2-ba61-51e65d192a24" />
 
-Figure. Read Pointer Margin Adjustment
+> Figure. Read Pointer Margin Adjustment
 
 ### TX FIFO CONNECTION
 In the high-speed transmit clock domain, multiple FIFO memory instances are interconnected to ensure that all memory banks share a consistent read and write pointer value.
+
 This interconnection guarantees correct data ordering and coherent pointer advancement across the entire TX FIFO structure.
+
 Furthermore, the unified pointer scheme enables consistent data alignment and accurate calibration across the entire TX data path.
 
 <img width="412" height="245" alt="image" src="https://github.com/user-attachments/assets/978a2aa5-7bbf-4f56-9bb0-d306f39be68e" />
 <img width="557" height="416" alt="image" src="https://github.com/user-attachments/assets/e2f10f09-5eea-461b-953f-c8b229261a96" />
 
-Figure. TX FIFO TOP Interconnection in the High‑speed Domain
+> Figure. TX FIFO TOP Interconnection in the High‑speed Domain
 
 ### TX FIFO CTL
 The TX Controller (TX CTL) is responsible for coordinating TX FIFO calibration and maintaining a safe separation between the write pointer and the read pointer in a free-running FIFO architecture.
@@ -175,12 +172,11 @@ To achieve modularity, timing robustness, and scalability, the TX CTL is partiti
 
 Each block has a clearly defined responsibility and communicates with the others using well-scoped control and status signals.
 
-
 <img width="350" height="164" alt="image" src="https://github.com/user-attachments/assets/968c1269-4537-4244-9acb-c58e65120709" />
 
 <img width="596" height="379" alt="image" src="https://github.com/user-attachments/assets/30786dd8-9282-4949-953d-482bfeca850c" />
 
-Figure. TX Calibration Controller Architecture
+> Figure. TX Calibration Controller Architecture
 
 The internal architecture of the TX Controller follows a strict separation of concerns:
 
@@ -191,13 +187,14 @@ The internal architecture of the TX Controller follows a strict separation of co
 This separation allows each block to be independently validated, simplifies timing closure across long control paths, and enables future extension of the calibration algorithm with minimal coupling.
 
 All control and status signals exchanged between the TX Controller and TX FIFO pass through deterministic long pipelines. As a result, the TX Controller must explicitly account for various sources of latency, including control pipeline depth (tx_pipe_depth), clock-domain crossing (CDC) latency, and synchronizer delays associated with calibration feedback. Consequently, calibration decisions are not made based on immediate signal values, but only after the corresponding pipeline and synchronization delays have been fully compensated. This ensures that the TX Controller evaluates calibration feedback only when it is stable and correctly aligned with the associated write operation.
+
 The overall timing relationship between write operations, calibration feedback, and synchronized evaluation is illustrated in the waveform below.
 
 <img width="296" height="92" alt="image" src="https://github.com/user-attachments/assets/a7a17e3e-1ba5-4824-81d5-dc5376444ae7" />
 
 <img width="996" height="508" alt="image" src="https://github.com/user-attachments/assets/1f539e6d-2946-43c0-b3ee-5441965598f7" />
 
-Figure. CDC Synchronization and Deterministic Delay before CalOut Evaluation (PIPE_DEPTH = 2)
+> Figure. CDC Synchronization and Deterministic Delay before CalOut Evaluation (PIPE_DEPTH = 2)
 
 As illustrated in Figure, the calibration feedback signal (CalOut) is generated in the TX FIFO Calibration block operating in the high-speed clock domain and is transferred to the TX controller clock domain through a CDC synchronizer. Due to the use of a two-stage flip-flop synchronizer, the synchronized signal (CalOut_syn) becomes visible in the control domain only after a fixed synchronization latency. 
 
@@ -212,9 +209,94 @@ This timing-aware design ensures that calibration decisions are made only when f
 
 <img width="568" height="379" alt="image" src="https://github.com/user-attachments/assets/15eb7371-a7a6-4ddd-a26c-2176b7653fd7" />
 
+<img width="773" height="569" alt="image" src="https://github.com/user-attachments/assets/c5c76633-fbff-48c9-937e-3c7ecb289dfb" />
+
+
 #### TX CALIBRATION SEQUENCER
+<img width="448" height="195" alt="image" src="https://github.com/user-attachments/assets/db721d15-092d-422a-9799-49ee55f89fb2" />
+
+<img width="866" height="566" alt="image" src="https://github.com/user-attachments/assets/190add2f-7180-417a-9f77-29207ccb3375" />
+
+> Figure. TX calibration sequencer block diagram
+
+<img width="557" height="134" alt="image" src="https://github.com/user-attachments/assets/19c259db-bdec-45db-8717-294a1c2babd5" />
+
+      (a) CalibSessionCtrl Sub block diagram
+
+<img width="619" height="195" alt="image" src="https://github.com/user-attachments/assets/40ed548b-51b5-4547-9b46-515ccdfcf5a4" />
+
+      (b) CalibStartCtrl Sub block diagram
+
+<img width="509" height="153" alt="image" src="https://github.com/user-attachments/assets/6258be76-becb-4c02-8c15-7275e0092e84" />
+
+      (c) CalOutCheck Sub block diagram
+
+<img width="759" height="216" alt="image" src="https://github.com/user-attachments/assets/ce4e6c92-9c70-4700-beba-2018b5da1bbb" />
+
+      (d) CalibEndCtrl Sub block diagram
+
+<img width="461" height="152" alt="image" src="https://github.com/user-attachments/assets/854bb4a6-ee78-4e75-8c5d-ca4cb44e9c9c" />
+
+    (e) CalOutInitCtrl Sub block diagram
+
+
+<img width="1207" height="822" alt="image" src="https://github.com/user-attachments/assets/73e42bd3-a172-410a-beac-8ac4fbf5c154" />
+
+    (a) The calibration start is triggered by an external enable request (txcalib_en)
+
+<img width="1254" height="848" alt="image" src="https://github.com/user-attachments/assets/d2550b9a-a4d1-4756-8b1e-3d96df2fd35e" />
+
+    (b) Calibration retry sequence when no valid reference is found after a calibration attempt
+
+> Figure. Timing Diagram of TX Calibration Sequencer
+
 
 #### TX CALIBRATION HELPER
+
+<img width="529" height="205" alt="image" src="https://github.com/user-attachments/assets/e1cf6e73-8908-41ce-94c2-1d6449b7ba33" />
+
+<img width="731" height="347" alt="image" src="https://github.com/user-attachments/assets/6e3c8bec-2077-44c7-9f8e-f5771278fb50" />
+
+> Figure. TX Calibration Helper Block Diagram
+
+
+<img width="788" height="190" alt="image" src="https://github.com/user-attachments/assets/ce8bd4ec-9bf5-4675-8fe2-26327f75c36b" />
+
+      (a) RefFoundDetector Sub block diagram
+
+<img width="523" height="244" alt="image" src="https://github.com/user-attachments/assets/56da0df6-b8b8-4800-a927-92d16a381297" />
+
+      (b) PauseLengthSelect Sub block diagram
+
+<img width="866" height="547" alt="image" src="https://github.com/user-attachments/assets/e09af396-efb9-43c6-8c67-d6f5e922aa58" />
+
+      (c) PauseStepCtrl Sub block diagram
+
+
+
+<img width="1231" height="944" alt="image" src="https://github.com/user-attachments/assets/27da3769-6f9f-4f9d-926d-aa97e328a01e" />
+
+      (a) Qualified CalOut Rising Edge Detection (Reference Found)
+
+<img width="1057" height="936" alt="image" src="https://github.com/user-attachments/assets/673b25d5-2b1b-4a4d-90bd-db9894abe28c" />
+
+      (b) Ignored CalOut Transition During First Calibration
+
+> Figure. Timing Diagram of TX Calibration Helper
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
