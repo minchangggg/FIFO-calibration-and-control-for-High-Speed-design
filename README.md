@@ -1,4 +1,4 @@
-## OVERVIEW
+<img width="6730" height="4700" alt="rx_dv_may2-Page-5" src="https://github.com/user-attachments/assets/657b5b3a-efba-4e24-b3ac-710e20a6c9ff" /># OVERVIEW
 In high-speed data transfer design, there is always requirement to convert slow speed clock domain to high-speed clock domain. In some designs, the high-speed data region is high density that it doesn’t allow any logic except for data pipelines. There is also requirement to reduce data latency as much as possible.
 
 The above requirements lead to free running FIFO design (pointer always switches when clock is available), that only converts data from low speed to high speed and removes all normal flags such as empty or full. To use the FIFO properly, the controller must calibrate the pointer, so that the FIFO will never be empty or full.
@@ -54,6 +54,7 @@ The TX FIFO operates using the system clock ( clk ) and transmit clock ( txclk )
 | `rx_cal_ctl[n-1:0]` | Output | `clk` | — | RX calibration control signals |
 | `rx_calout[3:0]` | Input | `clk` | — | RX calibration feedback value |
 
+# TX DESIGN
 ## TX Specifications
 | Features
 
@@ -273,7 +274,6 @@ This timing-aware design ensures that calibration decisions are made only when f
       (c) PauseStepCtrl Sub block diagram
 
 
-
 <img width="1231" height="944" alt="image" src="https://github.com/user-attachments/assets/27da3769-6f9f-4f9d-926d-aa97e328a01e" />
 
       (a) Qualified CalOut Rising Edge Detection (Reference Found)
@@ -284,17 +284,36 @@ This timing-aware design ensures that calibration decisions are made only when f
 
 > Figure. Timing Diagram of TX Calibration Helper
 
+## TX Simulation Results  
+<img width="1462" height="822" alt="image" src="https://github.com/user-attachments/assets/c27246a9-d6a7-472d-a49f-b77dd03ed886" />
+
+      a) Initial TX Calibration Phase
+      
+<img width="1442" height="810" alt="image" src="https://github.com/user-attachments/assets/b7c62371-668a-425b-8825-2961c9d421ae" />
+
+      b) Detect the reference point via CalOut and adjust it according to the input margin
+
+<img width="1461" height="822" alt="image" src="https://github.com/user-attachments/assets/69e8b956-a6a5-4009-bf59-f7b5425b7e8a" />
+
+      c) Stable TX Operation After Calibration
+
+> Figure. TX Block Simulation Results
+
+# RX VERIFICATION
+
+<img width="6730" height="4700" alt="rx_dv_may2-Page-5" src="https://github.com/user-attachments/assets/61533fee-f4e6-426a-ad11-dc07abe6e4b0" />
+
+
+<img width="5160" height="2610" alt="rx_dv_may2-Page-5 (1)" src="https://github.com/user-attachments/assets/ad729a13-ea86-4c2e-b954-bcfbee56e177" />
+
+
+<img width="5920" height="3220" alt="rx_dv_may2-Page-5 (2)" src="https://github.com/user-attachments/assets/9723667d-5811-4baf-9186-612da3c8418b" />
 
 
 
+<img width="7770" height="3870" alt="rx_dv_may2-Page-5 (3)" src="https://github.com/user-attachments/assets/015b0318-d101-439c-94e4-15619ce845ba" />
 
-
-
-
-
-
-
-
+<img width="7620" height="3720" alt="rx_dv_may2-Page-5 (4)" src="https://github.com/user-attachments/assets/92d7cbb3-4340-4e6f-a736-4264fda5c486" />
 
 
 
