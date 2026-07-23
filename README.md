@@ -302,9 +302,9 @@ This timing-aware design ensures that calibration decisions are made only when f
 
 ## File structure
 
-<img width="5000" alt="rx_dv_may2-Page-5" src="https://github.com/user-attachments/assets/61533fee-f4e6-426a-ad11-dc07abe6e4b0" />
+<img width="900" alt="rx_dv_may2-Page-5" src="https://github.com/user-attachments/assets/61533fee-f4e6-426a-ad11-dc07abe6e4b0" />
 
-<img width="2500" alt="rx_dv_may2-Page-5 (1)" src="https://github.com/user-attachments/assets/ad729a13-ea86-4c2e-b954-bcfbee56e177" />
+<img width="800" alt="rx_dv_may2-Page-5 (1)" src="https://github.com/user-attachments/assets/ad729a13-ea86-4c2e-b954-bcfbee56e177" />
 
 > Figure. RX Testbench File Structure
 
@@ -313,58 +313,16 @@ The verification testbench architecture is designed as a modular and reusable en
 
 At the top level (TB_TOP), the testbench integrates the Device Under Test (DUT), interface, and checker logic (SVA) to validate functionality and protocol behavior.
 
-<img width="4500" alt="rx_dv_may2-Page-5 (2)" src="https://github.com/user-attachments/assets/9723667d-5811-4baf-9186-612da3c8418b" />
+<img width="800" alt="rx_dv_may2-Page-5 (2)" src="https://github.com/user-attachments/assets/9723667d-5811-4baf-9186-612da3c8418b" />
 
 > Figure. Verification testbench architecture
-
-#### RX Clock Generator (VIP)
-- A dedicated rxclk generator (VIP) provides clock stimulus:
-  + Generates configurable clock (frequency, phase, start timing)
-  + Operates independently from stimulus generation
-  + Plays a critical role in calibration, since clock phase affects: CalOut detection, pointer alignment, final calib margin
-
-#### RX Scoreboard
-<img width="600" alt="image" src="https://github.com/user-attachments/assets/12a58dd8-c89c-4989-9fb5-bcfd6a3b617f" />
-
-```
-At T1: rdptr = 3, wrptr = 2 => raw_margin = (2 - 4*4) = -14 => real_margin = -14 + 16 = 2
-At T2: rdptr = 0, wrptr = 6 => raw_margin = (6 - 4*1) = 2 => real_margin = 2
-```
-
-<img width="7000" alt="rx_dv_may2-Page-5 (5)" src="https://github.com/user-attachments/assets/9c555e1a-fa34-4841-9f4c-1349ac49d2f3" />
-
-<img width="7000" alt="rx_dv_may2-Page-5 (4)" src="https://github.com/user-attachments/assets/92d7cbb3-4340-4e6f-a736-4264fda5c486" />
-
-Figure. Scoreboard Margin Calculation and Validation (margin = 2)
-
-#### RX Coverage
-Objective
-- Verify calibration behavior across CalOut, margin, and latency
-- Ensure correctness under all operating conditions
-
-Sampling
-
-- When: When rxcalib_done rising edge
-- Why: stable, final calibration result (latched CalOut)
-
-Coverage Closure
-
-- Directed tests → hit basic bins
-- Random tests → expand space
-- Closure test → fill gaps
-
-=> Target: 100% cross coverage
-
-<img width="659" alt="image" src="https://github.com/user-attachments/assets/10d0b281-9b11-43af-aa5c-89d31be432ac" />
-
-<img width="656" alt="image" src="https://github.com/user-attachments/assets/fa93f25c-92fc-414e-8cf2-eb1f4b249def" />
 
 ## RX Verification Results 
 All regression tests passed successfully
 
 No SVA violations were detected during verification
 
-<img width="1212" alt="image" src="https://github.com/user-attachments/assets/d540c645-d96e-4f03-9a6f-6423a982347b" />
+<img width="800" alt="image" src="https://github.com/user-attachments/assets/d540c645-d96e-4f03-9a6f-6423a982347b" />
 
 > Figure. RX regression test results summary
 
@@ -374,9 +332,9 @@ No uncovered bins observed in any coverage group
 
 → Confirms completeness of verification for RX calibration behavior
 
-<img width="525" alt="image" src="https://github.com/user-attachments/assets/d4417231-fde0-491a-a76f-5af73e8c25b8" />
+<img width="400" alt="image" src="https://github.com/user-attachments/assets/d4417231-fde0-491a-a76f-5af73e8c25b8" />
 
-<img width="940" alt="image" src="https://github.com/user-attachments/assets/a754a8b4-f9b4-49e1-a1b0-0863d82c1391" />
+<img width="500" alt="image" src="https://github.com/user-attachments/assets/a754a8b4-f9b4-49e1-a1b0-0863d82c1391" />
 
 > Figure. RX calibration functional coverage summary
 
