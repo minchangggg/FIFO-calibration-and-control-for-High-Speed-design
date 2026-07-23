@@ -84,7 +84,6 @@ Before calibration, the relative position between write and read pointers is und
 
 > Figure. Long Pipeline
 
-
 ### TX FIFO
 | Overview
 
@@ -104,18 +103,11 @@ Before calibration, the relative position between write and read pointers is und
 
 > Figure. TX FIFO Data Path and Internal Structure
 
-<img width="636" alt="image" src="https://github.com/user-attachments/assets/9dc22294-0794-4ff5-83d0-86f3a1bb6a42" />
-
-> Figure. TX FIFO Memory Mapping (16-bit Word to 4-bit Beats)
-
-<img width="386" alt="image" src="https://github.com/user-attachments/assets/239857b5-fc6c-4895-9089-487de648db53" />
-
-> Figure. TX FIFO Model Delay Block (Propagation Delay)
-
 <img width="526" alt="image" src="https://github.com/user-attachments/assets/6292ea91-1242-4a89-b7e3-249d1c9ae540" />
 
 > Figure. Example of Write/Read Pointer Separation Illustrates pointer distance with margin = 0
 
+### TX FIFO CALIBRATION
 <img width="314" alt="image" src="https://github.com/user-attachments/assets/4f9b1313-4e41-4764-97e8-6bf0166ec034" />
 <img width="298" alt="image" src="https://github.com/user-attachments/assets/aff7956e-8ba1-4c99-a59f-c5d2fc0a308a" />
 <img width="607" alt="image" src="https://github.com/user-attachments/assets/3e2b0235-cc73-4f5d-8663-68c23b01a8b3" />
@@ -131,15 +123,6 @@ Before calibration, the relative position between write and read pointers is und
       (b) Read pointer enters detection window → TxCalOut = 1
 
 > Figure. TX FIFO Calibration Timing for Different CalOut Conditions
-
-<img width="507" alt="image" src="https://github.com/user-attachments/assets/3999f3c1-65b7-451d-8fd5-f8e146b10fb2" />
-<img width="363" alt="image" src="https://github.com/user-attachments/assets/29441c86-3e73-4acc-98fc-cd381ec5632a" />
-
-> Figure. Read Clock Pause Logic and Waveform
-
-<img width="350" alt="image" src="https://github.com/user-attachments/assets/0f1dac5f-3c31-4be0-9bea-5d1cb7f17946" />
-
-> Figure. CDC logic
 
 <img width="1014" alt="image" src="https://github.com/user-attachments/assets/871fc8ff-defc-47e2-ba61-51e65d192a24" />
 
@@ -174,7 +157,6 @@ To achieve modularity, timing robustness, and scalability, the TX CTL is partiti
 Each block has a clearly defined responsibility and communicates with the others using well-scoped control and status signals.
 
 <img width="350" alt="image" src="https://github.com/user-attachments/assets/968c1269-4537-4244-9acb-c58e65120709" />
-
 <img width="596" alt="image" src="https://github.com/user-attachments/assets/30786dd8-9282-4949-953d-482bfeca850c" />
 
 > Figure. TX Calibration Controller Architecture
@@ -206,38 +188,16 @@ Therefore, starting from the assertion of start_calib in the controller, CalOut 
 This timing-aware design ensures that calibration decisions are made only when feedback signals are stable and correctly aligned with their corresponding write operations.
 
 #### TX WRITE GENERATION
-<img width="350" alt="image" src="https://github.com/user-attachments/assets/3a7a07e0-4dc7-4150-934a-a80dab7eaf63" />
-
-<img width="568" alt="image" src="https://github.com/user-attachments/assets/15eb7371-a7a6-4ddd-a26c-2176b7653fd7" />
+<img width="330" alt="image" src="https://github.com/user-attachments/assets/3a7a07e0-4dc7-4150-934a-a80dab7eaf63" />
 
 <img width="500" alt="image" src="https://github.com/user-attachments/assets/c5c76633-fbff-48c9-937e-3c7ecb289dfb" />
 
 
 #### TX CALIBRATION SEQUENCER
-<img width="400" alt="image" src="https://github.com/user-attachments/assets/db721d15-092d-422a-9799-49ee55f89fb2" />
-<img width="750" alt="image" src="https://github.com/user-attachments/assets/190add2f-7180-417a-9f77-29207ccb3375" />
+<img width="350" alt="image" src="https://github.com/user-attachments/assets/db721d15-092d-422a-9799-49ee55f89fb2" />
+<img width="700" alt="image" src="https://github.com/user-attachments/assets/190add2f-7180-417a-9f77-29207ccb3375" />
 
 > Figure. TX calibration sequencer block diagram
-
-<img width="500" alt="image" src="https://github.com/user-attachments/assets/19c259db-bdec-45db-8717-294a1c2babd5" />
-
-      (a) CalibSessionCtrl Sub block diagram
-
-<img width="550" alt="image" src="https://github.com/user-attachments/assets/40ed548b-51b5-4547-9b46-515ccdfcf5a4" />
-
-      (b) CalibStartCtrl Sub block diagram
-
-<img width="480" alt="image" src="https://github.com/user-attachments/assets/6258be76-becb-4c02-8c15-7275e0092e84" />
-
-      (c) CalOutCheck Sub block diagram
-
-<img width="680" alt="image" src="https://github.com/user-attachments/assets/ce4e6c92-9c70-4700-beba-2018b5da1bbb" />
-
-      (d) CalibEndCtrl Sub block diagram
-
-<img width="380" alt="image" src="https://github.com/user-attachments/assets/854bb4a6-ee78-4e75-8c5d-ca4cb44e9c9c" />
-
-      (e) CalOutInitCtrl Sub block diagram
 
 
 <img width="1207" alt="image" src="https://github.com/user-attachments/assets/73e42bd3-a172-410a-beac-8ac4fbf5c154" />
@@ -258,20 +218,6 @@ This timing-aware design ensures that calibration decisions are made only when f
 <img width="600" alt="image" src="https://github.com/user-attachments/assets/6e3c8bec-2077-44c7-9f8e-f5771278fb50" />
 
 > Figure. TX Calibration Helper Block Diagram
-
-
-<img width="750" alt="image" src="https://github.com/user-attachments/assets/ce8bd4ec-9bf5-4675-8fe2-26327f75c36b" />
-
-      (a) RefFoundDetector Sub block diagram
-
-<img width="500" alt="image" src="https://github.com/user-attachments/assets/56da0df6-b8b8-4800-a927-92d16a381297" />
-
-      (b) PauseLengthSelect Sub block diagram
-
-<img width="840" alt="image" src="https://github.com/user-attachments/assets/e09af396-efb9-43c6-8c67-d6f5e922aa58" />
-
-      (c) PauseStepCtrl Sub block diagram
-
 
 <img width="1231" alt="image" src="https://github.com/user-attachments/assets/27da3769-6f9f-4f9d-926d-aa97e328a01e" />
 
