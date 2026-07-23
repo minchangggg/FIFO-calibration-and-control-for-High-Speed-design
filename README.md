@@ -1,10 +1,20 @@
-# FIFO-calibration-and-control-for-High-Speed-design
 ## OVERVIEW
 In high-speed data transfer design, there is always requirement to convert slow speed clock domain to high-speed clock domain. In some designs, the high-speed data region is high density that it doesn’t allow any logic except for data pipelines. There is also requirement to reduce data latency as much as possible.
 
 The above requirements lead to free running FIFO design (pointer always switches when clock is available), that only converts data from low speed to high speed and removes all normal flags such as empty or full. To use the FIFO properly, the controller must calibrate the pointer, so that the FIFO will never be empty or full.
 
-<img width="1032" height="529" alt="image" src="https://github.com/user-attachments/assets/ef2ecdb5-3522-4488-870f-74c717bb81fa" />
+<img width="542" height="162" alt="fifo-Architecture drawio" src="https://github.com/user-attachments/assets/58be08ff-d59c-447c-90b2-efd7229aa8c3" />
+
+> Figure High Speed Design
+
+<img width="6560" height="3856" alt="fifo-Top Wrapper Interface" src="https://github.com/user-attachments/assets/112a1181-9bfe-4d18-90e3-226dc8f95281" />
+
+> Figure TOP Wrapper of CTL and FIFO
+
+The TOP Wrapper provides the top-level integration of the Control Unit (CTL) with the Transmit (TX) and Receive (RX) FIFO blocks and Long Pipeline blocks. It serves as a structural wrapper responsible for signal routing, timing isolation, and clock-domain interfacing, without implementing protocol or algorithmic logic.
+The CTL block generates control, pointer, and calibration signals for both TX and RX paths, and receives corresponding calibration and status outputs from the FIFO blocks. All control and status signals between CTL and FIFO TX/RX are routed through dedicated long pipeline stages to address long-path timing constraints and physical implementation requirements.
+The CTL block generates control, pointer, and calibration signals for both TX and RX paths, and receives corresponding calibration and status outputs from the FIFO blocks. All control and status signals between CTL and FIFO TX/RX are routed through dedicated long pipeline stages to address long-path timing constraints and physical implementation requirements.
+The TX FIFO operates using the system clock ( clk ) and transmit clock ( txclk ), buffering transmit data and supporting TX calibration. The RX FIFO operates using the system clock ( clk ) and receive clock ( rxclk ), capturing and buffering receive data and supporting RX calibration. Pipeline stages are applied on both forward and return paths to ensure proper signal alignment and timing closure across clock domains.
 
 ### Signals for CTL Interface Description
 
@@ -44,9 +54,29 @@ The above requirements lead to free running FIFO design (pointer always switches
 | `rx_cal_ctl[n-1:0]` | Output | `clk` | — | RX calibration control signals |
 | `rx_calout[3:0]` | Input | `clk` | — | RX calibration feedback value |
 
+## TX Specifications
+> | Features
 
+The TX path is responsible for transferring data from the low-speed control clock domain (clk) to the high-speed transmit clock domain (txclk).
 
-## Specifications
+To minimize latency and reduce logic complexity in the high-speed region, a free-running FIFO architecture is adopted, in which conventional full and empty flags are removed. 
+
+Since both write and read pointers advance continuously with their respective clocks, a dedicated calibration mechanism is required to establish and maintain safe separation between pointers.
+The TX subsystem therefore consists of the TX FIFO, a FIFO calibration block, and a TX control (TX CTL) unit, all interconnected through deterministic long pipelines to meet timing constraints.
+
+> | TX Calibration Flow Summary
+
+TX calibration proceeds in three phases: reference sweep, reference confirmation, and margin application.
+
+- During the reference sweep, the read pointer is gradually shifted using discrete read-clock pauses until a valid CalOut transition is detected.
+- Once the reference point is confirmed, additional pauses corresponding to the programmed calibration margin are applied to establish a safe pointer separation for normal operation.
+
+### TX WRAPPER
+The TX Wrapper provides the top-level structural integration between the TX Controller (TX CTL) and the TX FIFO blocks. It does not implement protocol or algorithmic logic, but instead focuses on signal routing, timing isolation, and clock-domain interfacing.
+
+A fixed-latency control pipeline is inserted between TX CTL and the TX FIFO Top to close timing on long control paths. This pipeline introduces a deterministic delay, which is explicitly accounted for by the TX calibration logic to ensure correct alignment of write, pause, and calibration feedback signals.
+
+Before calibration, the relative position between write and read pointers is undefined, and safe data transfer is not guaranteed.
 
 <img width="851" height="366" alt="image" src="https://github.com/user-attachments/assets/2080d3b1-ad8a-4a37-babc-89340beafc30" />
 
@@ -57,6 +87,21 @@ Figure. TX Wrapper Architecture and Data/Control Path Integration
 Figure. Long Pipeline
 
 
+### TX FIFO
+| Overview
+The TX FIFO implements a free‑running asynchronous FIFO to transfer data from the low‑speed control clock domain ( WrClk ) to the high‑speed transmit clock domain ( RdClk ).
+The FIFO performs a word‑to‑beat data conversion:
+A 16‑bit write word is written into the FIFO in the control domain
+The data is internally stored as four consecutive 4‑bit memory entries
+The read side outputs 4‑bit data beats at high speed
+The FIFO characteristics are as follows:
+Logical depth of 4 words in the write domain
+Equivalent to 16 physical entries in the read domain
+The FIFO does not provide explicit full/empty status and therefore relies entirely on calibration to
+guarantee safe operation.
+A safe pointer separation is maintained through the TX calibration mechanism to ensure reliable data
+transfer in the absence of flow-control signals.
+
 <img width="654" height="324" alt="image" src="https://github.com/user-attachments/assets/7aa4763c-811c-482a-918f-0af482be6ec1" />
 
 Figure. TX FIFO Data Path and Internal Structure
@@ -64,8 +109,6 @@ Figure. TX FIFO Data Path and Internal Structure
 <img width="636" height="390" alt="image" src="https://github.com/user-attachments/assets/9dc22294-0794-4ff5-83d0-86f3a1bb6a42" />
 
 Figure. TX FIFO Memory Mapping (16-bit Word to 4-bit Beats)
-
-
 
 <img width="386" height="212" alt="image" src="https://github.com/user-attachments/assets/239857b5-fc6c-4895-9089-487de648db53" />
 
@@ -92,32 +135,46 @@ Figure. TX FIFO calibration block
 
 Figure. TX FIFO Calibration Timing for Different CalOut Conditions
 
-
-
 <img width="507" height="99" alt="image" src="https://github.com/user-attachments/assets/3999f3c1-65b7-451d-8fd5-f8e146b10fb2" />
 
 <img width="363" height="318" alt="image" src="https://github.com/user-attachments/assets/29441c86-3e73-4acc-98fc-cd381ec5632a" />
 
 Figure. Read Clock Pause Logic and Waveform
 
-
 <img width="350" height="96" alt="image" src="https://github.com/user-attachments/assets/0f1dac5f-3c31-4be0-9bea-5d1cb7f17946" />
 
 Figure. CDC logic
-
 
 <img width="1014" height="425" alt="image" src="https://github.com/user-attachments/assets/871fc8ff-defc-47e2-ba61-51e65d192a24" />
 
 Figure. Read Pointer Margin Adjustment
 
+### TX FIFO CONNECTION
+In the high-speed transmit clock domain, multiple FIFO memory instances are interconnected to ensure that all memory banks share a consistent read and write pointer value.
+This interconnection guarantees correct data ordering and coherent pointer advancement across the entire TX FIFO structure.
+Furthermore, the unified pointer scheme enables consistent data alignment and accurate calibration across the entire TX data path.
 
 <img width="412" height="245" alt="image" src="https://github.com/user-attachments/assets/978a2aa5-7bbf-4f56-9bb0-d306f39be68e" />
 <img width="557" height="416" alt="image" src="https://github.com/user-attachments/assets/e2f10f09-5eea-461b-953f-c8b229261a96" />
 
 Figure. TX FIFO TOP Interconnection in the High‑speed Domain
 
-
 ### TX FIFO CTL
+The TX Controller (TX CTL) is responsible for coordinating TX FIFO calibration and maintaining a safe separation between the write pointer and the read pointer in a free-running FIFO architecture.
+
+In the absence of FIFO status flags, TX CTL effectively serves as a flow-control mechanism by regulating pointer separation.
+
+The controller operates entirely in the control clock domain (clk) and interfaces with the TX FIFO and TX FIFO calibration blocks through fixed-latency pipelines.
+
+Since the FIFO does not provide explicit full or empty indicators, TX CTL establishes a valid operating point using deterministic write behavior, synchronized calibration feedback, and controlled read-clock pauses.
+
+To achieve modularity, timing robustness, and scalability, the TX CTL is partitioned into three functionally independent blocks:
+- TX Write Generator
+- TX Calibration Sequencer
+- TX Calibration Helper
+
+Each block has a clearly defined responsibility and communicates with the others using well-scoped control and status signals.
+
 
 <img width="350" height="164" alt="image" src="https://github.com/user-attachments/assets/968c1269-4537-4244-9acb-c58e65120709" />
 
@@ -125,14 +182,39 @@ Figure. TX FIFO TOP Interconnection in the High‑speed Domain
 
 Figure. TX Calibration Controller Architecture
 
+The internal architecture of the TX Controller follows a strict separation of concerns:
+
+- Data pattern generation and write-pointer activity are isolated in the TX Write Generator.
+- Calibration session control, timing alignment, and retry logic are handled by the TX Calibration Sequencer.
+- Interpretation of synchronized calibration feedback and generation of step-based pause control are implemented in the TX Calibration Helper.
+
+This separation allows each block to be independently validated, simplifies timing closure across long control paths, and enables future extension of the calibration algorithm with minimal coupling.
+
+All control and status signals exchanged between the TX Controller and TX FIFO pass through deterministic long pipelines. As a result, the TX Controller must explicitly account for various sources of latency, including control pipeline depth (tx_pipe_depth), clock-domain crossing (CDC) latency, and synchronizer delays associated with calibration feedback. Consequently, calibration decisions are not made based on immediate signal values, but only after the corresponding pipeline and synchronization delays have been fully compensated. This ensures that the TX Controller evaluates calibration feedback only when it is stable and correctly aligned with the associated write operation.
+The overall timing relationship between write operations, calibration feedback, and synchronized evaluation is illustrated in the waveform below.
+
 <img width="296" height="92" alt="image" src="https://github.com/user-attachments/assets/a7a17e3e-1ba5-4824-81d5-dc5376444ae7" />
 
 <img width="996" height="508" alt="image" src="https://github.com/user-attachments/assets/1f539e6d-2946-43c0-b3ee-5441965598f7" />
 
 Figure. CDC Synchronization and Deterministic Delay before CalOut Evaluation (PIPE_DEPTH = 2)
 
+As illustrated in Figure, the calibration feedback signal (CalOut) is generated in the TX FIFO Calibration block operating in the high-speed clock domain and is transferred to the TX controller clock domain through a CDC synchronizer. Due to the use of a two-stage flip-flop synchronizer, the synchronized signal (CalOut_syn) becomes visible in the control domain only after a fixed synchronization latency. 
+
+To ensure accurate evaluation of the calibration feedback, the TX Controller intentionally inserts a fixed delay between the calibration write event and the CalOut checking point. This delay accounts for both pipeline latency and CDC synchronization latency, ensuring that CalOut is sampled only when it is stable and properly aligned with the corresponding write operation.
+
+Therefore, starting from the assertion of start_calib in the controller, CalOut evaluation is enabled after (PIPE_DEPTH + 4) clock cycles. For example, when PIPE_DEPTH = 2, as shown in Figure, calibration is initiated at T1, and CalOut is correctly evaluated at T7. 
+
+This timing-aware design ensures that calibration decisions are made only when feedback signals are stable and correctly aligned with their corresponding write operations.
+
+#### TX WRITE GENERATION
 <img width="379" height="150" alt="image" src="https://github.com/user-attachments/assets/3a7a07e0-4dc7-4150-934a-a80dab7eaf63" />
 
 <img width="568" height="379" alt="image" src="https://github.com/user-attachments/assets/15eb7371-a7a6-4ddd-a26c-2176b7653fd7" />
+
+#### TX CALIBRATION SEQUENCER
+
+#### TX CALIBRATION HELPER
+
 
 
